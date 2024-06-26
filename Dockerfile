@@ -37,9 +37,6 @@ COPY . .
 # Build the application (skip tests)
 RUN mvn clean package -DskipTests
 
-# Define base image for runtime stage
-RUN echo "** Verifying build output in /target directory **" && ls -la /target
-
 # Define base image for runtime stage (slim)
 FROM openjdk:18-jdk-slim
 
