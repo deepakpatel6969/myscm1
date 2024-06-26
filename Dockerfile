@@ -41,7 +41,7 @@ RUN mvn clean package -DskipTests
 FROM openjdk:18-jdk-slim
 
 # Copy JAR file (update name if needed)
-COPY --from=build /target/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
+COPY --from=build /target/SmartContactManager.jar SmartContactManager.jar
 
 # Expose port (needs mapping in Render)
 EXPOSE 8082
