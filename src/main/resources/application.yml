@@ -1,0 +1,12 @@
+## YAML Template.
+---
+
+# setup port
+
+server:
+  port: 8082
+
+spring:
+  profiles:
+    active: ${ENV:dev}
+
