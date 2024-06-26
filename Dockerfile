@@ -29,7 +29,7 @@
 FROM maven:3-openjdk-18 AS builder
 
 # Set working directory
-WORKDIR /app
+# WORKDIR /app
 
 # Copy project files
 COPY . .
@@ -41,13 +41,13 @@ RUN mvn clean package -DskipTests
 FROM openjdk:18-jdk-slim
 
 # Copy only the JAR file (assuming single JAR)
-COPY --from=builder /target/SmartContactManager.jar.original app.jar
+COPY --from=builder /target/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
 
 # Define working directory (optional, adjust based on your application)
-WORKDIR /app
+# WORKDIR /app
 
 # Expose port (needs mapping in Render)
 EXPOSE 8082
 
 # Define command to run the application
-ENTRYPOINT [ "java" , "-jar" , "app.jar"]
+ENTRYPOINT [ "java" , "-jar" , "SmartContactManager.jar"]

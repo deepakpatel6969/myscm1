@@ -141,7 +141,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>SmartContactManager</finalName>
-    </build>
+      </build>
 
 </project>
