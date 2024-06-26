@@ -41,7 +41,7 @@ RUN mvn clean package -DskipTests
 FROM openjdk:18-jdk-slim
 
 # Copy only the JAR file (assuming single JAR)
-COPY --from=builder /target/*.jar app.jar
+COPY --from=builder /target/SmartContactManager.jar app.jar
 
 # Define working directory (optional, adjust based on your application)
 WORKDIR /app
