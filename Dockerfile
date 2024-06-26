@@ -26,7 +26,7 @@
 # # Set the command to run the JAR file
 # ENTRYPOINT ["java", "-jar", "app.jar"]
 
-FROM maven:3-openjdk-18 AS build
+FROM maven:3-openjdk-18 AS builder
 
 # Set working directory
 WORKDIR /app
@@ -38,13 +38,19 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Define base image for runtime stage
+RUN echo "** Verifying build output in /target directory **" && ls -la /target
+
+# Define base image for runtime stage (slim)
 FROM openjdk:18-jdk-slim
 
-# Copy JAR file (update name if needed)
-COPY --from=build /target/SmartContactManager.jar SmartContactManager.jar
+# Copy only the JAR file (assuming single JAR)
+COPY --from=builder /target/*.jar app.jar
+
+# Define working directory (optional, adjust based on your application)
+WORKDIR /app
 
 # Expose port (needs mapping in Render)
 EXPOSE 8082
 
 # Define command to run the application
-ENTRYPOINT [ "java" , "-jar" , "SmartContactManager.jar"]
+ENTRYPOINT [ "java" , "-jar" , "app.jar"]
