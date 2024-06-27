@@ -25,10 +25,14 @@
 # # Set the command to run the JAR file
 # ENTRYPOINT ["java", "-jar", "app.jar"]
 
-FROM eclipse-temurin:17-jdk-alpine
-
-VOLUME /tmp
-
-COPY target/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
-
-ENTRYPOINT [ "java" ,"-jar" ,"/SmartContactManager.jar" ]
+FROM eclipse-temurin:17-jdk-focal
+ 
+WORKDIR /app
+ 
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+ 
+COPY src ./src
+ 
+CMD ["./mvnw", "spring-boot:run"]
