@@ -26,17 +26,11 @@
 # ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # Start with a base image containing Java runtime
-FROM openjdk:8-jdk-alpine
+FROM maven:3.8.3-openjdk-17 AS build
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Add a volume pointing to /tmp
-VOLUME /tmp
-
-# Make port 8080 available to the world outside this container
+FROM openjdk:17.0.1-jdk-slim
+COPY --from=build /target/SmartContactManager-0.0.1-SNAPSHOT.jar /SmartContactManager.jar
 EXPOSE 8082
-
-
-# Add the application's jar to the container
-ADD target/SmartContactManager-1.0.0.jar app.jar
-
-# Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+ENTRYPOINT ["java", "-jar", "SmartContactManager.jar"]
