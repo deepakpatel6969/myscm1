@@ -1,3 +1,18 @@
+# Build stage
+#
+FROM maven:3.8.3-openjdk-17 AS build
+COPY . .
+RUN mvn clean install
+
+#
+# Package stage
+#
+FROM eclipse-temurin:17-jdk
+COPY --from=build /target/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
+# ENV PORT=8080
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","SmartContactManager.jar"]
+
 
 # # Use a base image with JDK 17
 # FROM openjdk:17-jdk-slim
@@ -14,28 +29,28 @@
 # # Set the command to run the JAR file
 # ENTRYPOINT ["java", "-jar", "app.jar"]
 
-FROM maven:3-openjdk-18 AS builder
+# FROM maven:3-openjdk-18 AS builder
 
-# Set working directory
- WORKDIR /app
+# # Set working directory
+#  WORKDIR /app
 
-# Copy project files
-COPY . .
+# # Copy project files
+# COPY . .
 
-# Build the application (skip tests)
-RUN mvn clean package -DskipTests
+# # Build the application (skip tests)
+# RUN mvn clean package -DskipTests
 
-# Define base image for runtime stage (slim)
-FROM openjdk:18-jdk-slim
+# # Define base image for runtime stage (slim)
+# FROM openjdk:18-jdk-slim
 
-# Copy only the JAR file (assuming single JAR)
-COPY --from=builder /target/SmartContactManager-0.0.1-SNAPSHOT.jar app.jar
+# # Copy only the JAR file (assuming single JAR)
+# COPY --from=builder /target/SmartContactManager-0.0.1-SNAPSHOT.jar app.jar
 
-# Define working directory (optional, adjust based on your application)
- WORKDIR /app
+# # Define working directory (optional, adjust based on your application)
+#  WORKDIR /app
 
-# Expose port (needs mapping in Render)
-EXPOSE 8082
+# # Expose port (needs mapping in Render)
+# EXPOSE 8082
 
-# Define command to run the application
-ENTRYPOINT [ "java" , "-jar" , "app.jar"]
+# # Define command to run the application
+# ENTRYPOINT [ "java" , "-jar" , "app.jar"]
