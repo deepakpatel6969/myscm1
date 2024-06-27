@@ -1,15 +1,15 @@
-# FROM maven:3-openjdk-18 AS build
+FROM maven:3-openjdk-18 AS build
 
-# COPY . .
+COPY . .
 
-# RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests
 
-# FROM openjdk:18-jdk-slim
-# COPY --from=build /target/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
+FROM openjdk:18-jdk-slim
+COPY --from=build /target/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
 
-# EXPOSE 8082
+EXPOSE 8082
 
-# ENTRYPOINT [ "java" , "-jar" , "SmartContactManager.jar"]
+ENTRYPOINT [ "java" , "-jar" , "SmartContactManager.jar"]
 
 # # Use a base image with JDK 17
 # FROM openjdk:17-jdk-slim
@@ -25,12 +25,12 @@
 # # Set the command to run the JAR file
 # ENTRYPOINT ["java", "-jar", "app.jar"]
 
-# Start with a base image containing Java runtime
-FROM maven:3.8.3-openjdk-17 AS build
-COPY . .
-RUN mvn clean package -DskipTests
+# # Start with a base image containing Java runtime
+# FROM maven:3.8.3-openjdk-17 AS build
+# COPY . .
+# RUN mvn clean package -DskipTests
 
-FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/SmartContactManager-0.0.1-SNAPSHOT.jar /SmartContactManager.jar
-EXPOSE 8082
-ENTRYPOINT ["java", "-jar", "SmartContactManager.jar"]
+# FROM openjdk:17.0.1-jdk-slim
+# COPY --from=build /target/SmartContactManager-0.0.1-SNAPSHOT.jar /SmartContactManager.jar
+# EXPOSE 8082
+# ENTRYPOINT ["java", "-jar", "SmartContactManager.jar"]
