@@ -1,16 +1,28 @@
 # Build stage
-#
-FROM eclipse-temurin:17-jdk-focal
- 
+
+# Use a slim JDK image for building stage
+FROM maven:3.8-openjdk-slim AS build
+
+# Set working directory
 WORKDIR /app
- 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN ./mvnw dependency:go-offline
- 
-COPY src ./src
- 
-CMD ["./mvnw", "spring-boot:run"]
+
+COPY pom.xml ./
+COPY .mvn ./ 
+
+RUN ./mvnw dependency:go-offline -DskipTests
+
+RUN ./mvnw package -DskipTests
+
+FROM openjdk:19-jre-alpine AS runtime
+
+COPY --from=build /app/target/SmartContactManager.jar app.jar
+
+WORKDIR /app
+
+EXPOSE 8082
+
+CMD ["java", "-jar", "app.jar"]
+
 
 
 # # Use a base image with JDK 17
