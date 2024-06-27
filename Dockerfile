@@ -1,17 +1,16 @@
 # Build stage
 #
-FROM maven:3.8.3-openjdk-17 AS build
-COPY . .
-RUN mvn clean install
-
-#
-# Package stage
-#
-FROM eclipse-temurin:17-jdk
-COPY --from=build /target/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
-# ENV PORT=8080
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","SmartContactManager.jar"]
+FROM eclipse-temurin:17-jdk-focal
+ 
+WORKDIR /app
+ 
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+ 
+COPY src ./src
+ 
+CMD ["./mvnw", "spring-boot:run"]
 
 
 # # Use a base image with JDK 17
