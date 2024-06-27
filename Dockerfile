@@ -29,6 +29,6 @@ FROM eclipse-temurin:17-jdk-alpine
 
 VOLUME /tmp
 
-COPY targer/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
+COPY target/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
 
-ENTRYPOINT [ "java" ,"-jar" ,"SmartContactManager.jar" ]
+ENTRYPOINT [ "java" ,"-jar" ,"/SmartContactManager.jar" ]
