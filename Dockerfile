@@ -25,12 +25,8 @@
 # # Set the command to run the JAR file
 # ENTRYPOINT ["java", "-jar", "app.jar"]
 
-FROM maven:3.8.3-jdk-11 AS build
-COPY . /app
+FROM openjdk:18
 WORKDIR /app
-RUN mvn package -DskipTests
-
-# Second stage: create a slim image
-FROM openjdk:11-jre-slim
-COPY --from=build /app/target/SmartContactManager-0.0.1-SNAPSHOT.jar /app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+COPY ./target/SmartContactManager-0.0.1-SNAPSHOT.jar /app
+EXPOSE 8082
+CMD ["java", "-jar", "SmartContactManager-0.0.1-SNAPSHOT.jar"]
