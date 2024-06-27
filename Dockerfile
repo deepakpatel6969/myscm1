@@ -32,7 +32,7 @@ FROM openjdk:18-jdk-slim
 COPY --from=builder /target/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
 
 # Define working directory (optional, adjust based on your application)
- WORKDIR /app
+ WORKDIR /SmartContactManager.jar
 
 # Expose port (needs mapping in Render)
 EXPOSE 8082
