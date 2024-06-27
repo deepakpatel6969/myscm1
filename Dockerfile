@@ -1,5 +1,6 @@
 FROM maven:3-openjdk-18 AS build
 
+WORKDIR /app
 COPY . .
 
 RUN mvn clean package -DskipTests
@@ -7,6 +8,7 @@ RUN mvn clean package -DskipTests
 FROM openjdk:18-jdk-slim
 COPY --from=build /target/SmartContactManager-0.0.1-SNAPSHOT.jar SmartContactManager.jar
 
+WORKDIR /app
 EXPOSE 8082
 
 ENTRYPOINT [ "java" , "-jar" , "SmartContactManager.jar"]
@@ -15,7 +17,6 @@ ENTRYPOINT [ "java" , "-jar" , "SmartContactManager.jar"]
 # FROM openjdk:17-jdk-slim
 
 # # Set the working directory inside the container
-# WORKDIR /app
 
 # # Copy the JAR file from the host to the container
 # COPY target/SmartContactManager-0.0.1-SNAPSHOT.jar app.jar
