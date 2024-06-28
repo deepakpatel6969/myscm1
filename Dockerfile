@@ -1,14 +1,20 @@
-FROM openjdk:17
+FROM openjdk:17-alpine
 
 WORKDIR /app
 
-COPY . /app
+COPY pom.xml /app/pom.xml
 
-RUN mvn clean package
+RUN mvn dependency:go-offline
+
+COPY src /app/src
+
+COPY target /app/target
+
+RUN maven package
 
 EXPOSE 8081
 
-CMD ["java", "-jar", "target/SmartContactManager.jar"]
+CMD ["java", "-jar", "target/SmartContactManager-0.0.1-SNAPSHOT.jar"]
 
 # # Use a base image with JDK 17
 # FROM openjdk:17-jdk-slim
