@@ -1,29 +1,14 @@
-# Build stage
-
-# Use a slim JDK image for building stage
-FROM maven:3.8-openjdk-slim AS build
-
-# Set working directory
-WORKDIR /app
-
-COPY pom.xml ./
-COPY .mvn ./ 
-
-RUN ./mvnw dependency:go-offline -DskipTests
-
-RUN ./mvnw package -DskipTests
-
-FROM openjdk:19-jre-alpine AS runtime
-
-COPY --from=build /app/target/SmartContactManager.jar app.jar
+FROM openjdk:17
 
 WORKDIR /app
 
-EXPOSE 8082
+COPY . /app
 
-CMD ["java", "-jar", "app.jar"]
+RUN mvn clean package
 
+EXPOSE 8081
 
+CMD ["java", "-jar", "target/SmartContactManager.jar"]
 
 # # Use a base image with JDK 17
 # FROM openjdk:17-jdk-slim

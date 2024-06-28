@@ -182,7 +182,7 @@ public class HomeController {
 
         this.user = this.serviceImple.getUserByUsername(userName);
 
-        LocalTime localTime1 = ((LocalTime) httpSession.getAttribute("time")).plusMinutes(5);
+        LocalTime localTime1 = ((LocalTime) httpSession.getAttribute("time")).plusMinutes(AppConstants.EXPIRY_TIME);
         LocalTime localTime2 = LocalTime.now();
 
         if (user != null && localTime2.isBefore(localTime1)) {
@@ -210,7 +210,15 @@ public class HomeController {
     @GetMapping("/forgot-pass")
     public String SendForgotPasswordLink(HttpSession session, @RequestParam(name = "email") String email) {
 
+        if (this.serviceImple.isUserExist(email)) {
+
+            session.setAttribute("message",
+                    new Message("this email is not exist", MessageType.red));
+            return "redirect:/scm2/signin";
+        }
+
         if (this.serviceImple.forgotPass(email)) {
+            session.setAttribute("time1", LocalTime.now());
             session.setAttribute("message",
                     new Message("authentication link is send to registered mail", MessageType.blue));
         } else {
@@ -222,8 +230,17 @@ public class HomeController {
     }
 
     @GetMapping("/linkClicked/{changeUrl}")
-    public String goChangePassPage(Model model, @PathVariable("changeUrl") String constent,
+    public String goChangePassPage(HttpSession httpSession , Model model, @PathVariable("changeUrl") String constent,
             @RequestParam(name = "email") String email) {
+
+        LocalTime time1 = ((LocalTime) httpSession.getAttribute("time1")).plusMinutes(AppConstants.EXPIRY_TIME);
+
+        if ((LocalTime.now()).isAfter(time1)) {
+            httpSession.setAttribute("message",
+                    new Message("link has been expired !!", MessageType.red));
+            httpSession.removeAttribute("time1");
+            return "redirect:/scm2/signin";
+        }
 
         model.addAttribute("constent", constent);
         model.addAttribute("email", email);
@@ -241,10 +258,12 @@ public class HomeController {
         if (this.user != null && AppConstants.CHANGE_URL.equals(constent)) {
 
             httpSession.setAttribute("message", this.serviceImple.forgotChangePass(user, newPass1, newPass2));
-
+            httpSession.removeAttribute("time1");
         } else {
             httpSession.setAttribute("message",
                     new Message("INTERNAL_SERVER_ERROR please try again later some time!! ", MessageType.red));
+            httpSession.removeAttribute("time1");
+
         }
 
         return "redirect:/scm2/signin";

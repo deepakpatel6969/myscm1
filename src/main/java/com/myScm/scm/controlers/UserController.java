@@ -17,6 +17,7 @@ import com.myScm.scm.Dto.UserForm;
 import com.myScm.scm.entities.Contact;
 import com.myScm.scm.entities.User;
 import com.myScm.scm.errorHandler.ResourceNotFoundException;
+import com.myScm.scm.helper.AppConstants;
 import com.myScm.scm.helper.Message;
 import com.myScm.scm.helper.MessageType;
 import com.myScm.scm.serviceImpl.ContactServiceImpl;
@@ -786,6 +787,12 @@ public class UserController {
 
         session.setAttribute("time", localTime);
 
+        if(this.userServiceImple.isUserByEmail(newmail)){
+
+            session.setAttribute("message", new Message("email is already exist!! " + newmail, MessageType.yellow));
+            return "redirect:/scm2/user/changeMail";
+        }
+
         if (this.userServiceImple.sendChangeVerifyLink(newmail, oldMail)) {
             session.setAttribute("message", new Message("verification link is send to " + newmail, MessageType.blue));
             return "redirect:/scm2/user/changeMail";
@@ -804,7 +811,7 @@ public class UserController {
 
         this.user = this.userServiceImple.getUserByUsername(oldMail);
 
-        LocalTime localTime1 = ((LocalTime) httpSession.getAttribute("time")).plusMinutes(5);
+        LocalTime localTime1 = ((LocalTime) httpSession.getAttribute("time")).plusMinutes(AppConstants.EXPIRY_TIME);
         LocalTime localTime2 = LocalTime.now();
 
         if (user != null && localTime2.isBefore(localTime1)) {
@@ -812,11 +819,12 @@ public class UserController {
 
                 httpSession.setAttribute("message",
                         new Message("email verification is successfull", MessageType.green));
+                        httpSession.removeAttribute("time");
             }
         } else {
 
             if (localTime2.isAfter(localTime1)) {
-
+                httpSession.removeAttribute("time");
                 httpSession.setAttribute("message",
                         new Message("verification link expired!!", MessageType.red));
                 return "redirect:/scm2/user/changeMail";
