@@ -15,7 +15,7 @@ public interface userServices {
     User saveUser(UserForm user)throws Exception;
     User getUserById(String id); 
     User updateUser(User user,String name , String number, MultipartFile file);
-    void deleteUser(String id);
+    boolean deleteUser(User user);
     boolean isUserExist(String user_id);
     boolean isUserByEmail(String email);
     List<User> getAllUser();

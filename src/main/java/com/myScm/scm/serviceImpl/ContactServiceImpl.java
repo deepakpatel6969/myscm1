@@ -162,8 +162,7 @@ public class ContactServiceImpl implements contactServices {
 
             if (contact != null && this.contactIsExist(contact, user)) {
                 user.getContactList().remove(contact);
-                if (contact.getImagePublicId() != null) {
-
+                if (contact.getImagePublicId() != null && !contact.getImagePublicId().isEmpty()) {
                     this.cloudinaryService.deleteImage(contact.getImagePublicId());
                 }
                 this.contactRepo.delete(contact);
@@ -171,6 +170,7 @@ public class ContactServiceImpl implements contactServices {
             }
 
             return false;
+
         } catch (ContactNotFoundException e) {
 
             throw new ContactNotFoundException(
@@ -191,7 +191,7 @@ public class ContactServiceImpl implements contactServices {
                 // remove contact from user ContactList
                 user.getContactList().remove(this.contact);
 
-                if (contact.getImagePublicId() != null) {
+                if (contact.getImagePublicId() != null && !contact.getImagePublicId().isEmpty()) {
 
                     this.cloudinaryService.deleteImage(contact.getImagePublicId());
                 }
@@ -384,7 +384,27 @@ public class ContactServiceImpl implements contactServices {
             }
 
         } catch (ContactNotFoundException e) {
-            throw new ContactNotFoundException("we are not able to found the contact so please try again after some time!!");
+            throw new ContactNotFoundException(
+                    "we are not able to found the contact so please try again after some time!!");
+        }
+
+    }
+
+    // delete the list of contacts
+    @Override
+    public void deleteContactByContacts(User user, List<Contact> contactlist) {
+
+        try {
+
+            for (int i=0; i<contactlist.size() ; i++) {
+
+                this.deleteContact(contactlist.get(i), user);
+
+            }
+
+        } catch (ContactNotFoundException e) {
+            throw new ContactNotFoundException(
+                    "we are not able to found the contact so please try again after some time!!");
         }
 
     }

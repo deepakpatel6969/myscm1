@@ -150,18 +150,18 @@ public class UserController {
         this.contactPages = this.contactServiceImpl.getContactPages(page, user);
 
         if (this.contactPages.isEmpty() && page >= 1) {
-        this.contactPages = this.contactServiceImpl.getContactPages(page - 1,
-        this.user);
+            this.contactPages = this.contactServiceImpl.getContactPages(page - 1,
+                    this.user);
         }
         if (!this.contactPages.isEmpty()) {
 
-        model.addAttribute("contacts", this.contactPages);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPage", this.contactPages.getTotalPages());
-        model.addAttribute("elements", this.contactPages.getNumberOfElements());
+            model.addAttribute("contacts", this.contactPages);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPage", this.contactPages.getTotalPages());
+            model.addAttribute("elements", this.contactPages.getNumberOfElements());
 
         } else {
-        httpSession.setAttribute("message", new Message("you can not have any contact", MessageType.yellow));
+            httpSession.setAttribute("message", new Message("you can not have any contact", MessageType.yellow));
         }
 
         return "loggedin/viewContact";
@@ -312,15 +312,14 @@ public class UserController {
             this.userForm = this.userServiceImple.getUserFormByUser(this.user);
             updateUserForm.setProfilePic(this.user.getProfilePic());
             model.addAttribute("user", this.userForm);
-            
-        
+
             if (bindingResult.hasErrors()) {
                 return "loggedin/updateProfile";
             }
 
             this.user = this.userServiceImple.updateUser(user, updateUserForm.getUserName(),
-            updateUserForm.getUserNumber(),
-            updateUserForm.getProfile());
+                    updateUserForm.getUserNumber(),
+                    updateUserForm.getProfile());
 
             if (user != null) {
 
@@ -787,7 +786,7 @@ public class UserController {
 
         session.setAttribute("time", localTime);
 
-        if(this.userServiceImple.isUserByEmail(newmail)){
+        if (this.userServiceImple.isUserByEmail(newmail)) {
 
             session.setAttribute("message", new Message("email is already exist!! " + newmail, MessageType.yellow));
             return "redirect:/scm2/user/changeMail";
@@ -819,7 +818,7 @@ public class UserController {
 
                 httpSession.setAttribute("message",
                         new Message("email verification is successfull", MessageType.green));
-                        httpSession.removeAttribute("time");
+                httpSession.removeAttribute("time");
             }
         } else {
 
@@ -838,5 +837,18 @@ public class UserController {
 
         return "redirect:/scm2/user/change";
     }
+
+    // go to to delete page
+    @GetMapping("/deleteAccount")
+    public String goDeleteContactPage(Authentication authentication, Model model) {
+
+        this.userForm = this.userServiceImple.getUserFormByUser(this.userServiceImple.getUserFromLogin(authentication));
+        model.addAttribute("user", this.userForm);
+
+        return "loggedin/setting/deleteAccount";
+    }
+
+    
+
 
 }

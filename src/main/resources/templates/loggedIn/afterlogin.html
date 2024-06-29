@@ -240,8 +240,9 @@
                                 <span>change Email</span></a>
                         </li>
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Invoice</a>
+                            <a data-th-href="@{'/scm2/user/deleteAccount'}" id="deleteLink"
+                                class="dashItem flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ">
+                                <i class="text-gray-500 transition duration-300 group-hover:text-red-600 fa-solid fa-trash" ></i> <span class=" group-hover:text-red-500">Delete Account</span></a>
                         </li>
                     </ul>
                 </li>

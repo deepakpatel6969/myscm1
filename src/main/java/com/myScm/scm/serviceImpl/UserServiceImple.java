@@ -41,16 +41,19 @@ public class UserServiceImple implements userServices {
     private User user;
     private UserForm userForm;
     private final CloudnairyServiceImpl cloudinaryService;
-    private MailServiceImpl mailServiceImpl;
+    private final MailServiceImpl mailServiceImpl;
+    private final ContactServiceImpl contactServiceImpl;
 
     public UserServiceImple(UserRepo userRepo, ContactRepo contactRepo, PasswordEncoder encoder, Helper helper,
-            CloudnairyServiceImpl cloudnairyServiceImpl, MailServiceImpl mailServiceImpl) {
+            CloudnairyServiceImpl cloudnairyServiceImpl, MailServiceImpl mailServiceImpl,
+            ContactServiceImpl contactServiceImpl) {
         this.userRepo = userRepo;
         this.contactRepo = contactRepo;
         this.encoder = encoder;
         this.helper = helper;
         this.cloudinaryService = cloudnairyServiceImpl;
         this.mailServiceImpl = mailServiceImpl;
+        this.contactServiceImpl = contactServiceImpl;
     }
 
     // Get User By UserName
@@ -132,16 +135,23 @@ public class UserServiceImple implements userServices {
 
     // Delete The User
     @Override
-    public void deleteUser(String id) {
+    public boolean deleteUser(User user) {
 
         try {
+            if (!user.getContactList().isEmpty() && user.getContactList() != null) {
 
-            this.user = this.userRepo.findById(id)
-                    .orElseThrow(() -> new UserNotFound("User Not Present!!"));
-            userRepo.delete(this.user);
+                List<Contact> contacts = user.getContactList();
+                this.contactServiceImpl.deleteContactByContacts(user, contacts);
+
+            }
+
+            userRepo.delete(user);
+            return true;
         } catch (Exception e) {
-            throw new UserNotFound("resources are not found for this user so we can't be delete this!!");
+
+            throw new UserNotFound("we can't be find the resources for you");
         }
+
     }
 
     // Is User Exist

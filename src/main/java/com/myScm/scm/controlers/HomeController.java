@@ -36,6 +36,7 @@ public class HomeController {
         this.serviceImple = serviceImple;
     }
 
+    // GO home page
     @GetMapping("/home")
     public String gohomepage(Authentication authentication, Model model) {
 
@@ -49,6 +50,7 @@ public class HomeController {
         return new String("home");
     }
 
+    // GO About page
     @GetMapping("/about")
     public String goaboutpage(Authentication authentication, Model model) {
 
@@ -61,6 +63,8 @@ public class HomeController {
         return new String("about");
 
     }
+
+    // GO service Page
 
     @GetMapping("/service")
     public String goServicespage(Authentication authentication, Model model) {
@@ -75,6 +79,7 @@ public class HomeController {
         return new String("services");
     }
 
+    // GO conttact Page
     @GetMapping("/contact")
     public String goContactpage(HttpSession session, Authentication authentication, Model model) {
 
@@ -87,6 +92,8 @@ public class HomeController {
 
         return new String("contact");
     }
+
+    // go Sign in page
 
     @GetMapping("/signin")
     public String goSigninPage(Authentication authentication, Model model) {
@@ -101,6 +108,7 @@ public class HomeController {
         return new String("signin");
     }
 
+    // Send feedback from Contact-Us page
     @PostMapping("/contactUs")
     public String postMethodName(@RequestParam("email") String email, @RequestParam("mobile") String contactNumber,
             @RequestParam("query") String query, HttpSession httpSession) {
@@ -117,6 +125,7 @@ public class HomeController {
         return "redirect:/scm2/contact";
     }
 
+    // Go Signup page
     @GetMapping("/signup")
     public String goSignUpPage(Authentication authentication, Model model) {
 
@@ -131,6 +140,7 @@ public class HomeController {
         return "signup";
     }
 
+    // Proceed to the User data
     @PostMapping("/do_signup")
     public String doSignUp(@Valid @ModelAttribute() UserForm user, BindingResult bindingResult, HttpSession session) {
 
@@ -160,6 +170,7 @@ public class HomeController {
         return "loggedin/Setting/changeEmail";
     }
 
+    // Sending to the verification link
     @GetMapping("/sendVerifyLink")
     public String sendVerifyLink(@RequestParam(name = "email", defaultValue = "") String email, HttpSession session) {
 
@@ -176,6 +187,7 @@ public class HomeController {
         return "redirect:/scm2/signin";
     }
 
+    // Verify Email at the signup time
     @GetMapping("/verify/email/link/user/byuser/dkhefuen-eefefe")
     public String verifyEmail(@RequestParam(name = "email", defaultValue = "") String userName,
             HttpSession httpSession) {
@@ -207,6 +219,7 @@ public class HomeController {
         return "redirect:/scm2/signin";
     }
 
+    // Send to the Forgot password Link to User Email
     @GetMapping("/forgot-pass")
     public String SendForgotPasswordLink(HttpSession session, @RequestParam(name = "email") String email) {
 
@@ -229,8 +242,9 @@ public class HomeController {
         return "redirect:/scm2/signin";
     }
 
+    // Go to the Change Password page
     @GetMapping("/linkClicked/{changeUrl}")
-    public String goChangePassPage(HttpSession httpSession , Model model, @PathVariable("changeUrl") String constent,
+    public String goChangePassPage(HttpSession httpSession, Model model, @PathVariable("changeUrl") String constent,
             @RequestParam(name = "email") String email) {
 
         LocalTime time1 = ((LocalTime) httpSession.getAttribute("time1")).plusMinutes(AppConstants.EXPIRY_TIME);

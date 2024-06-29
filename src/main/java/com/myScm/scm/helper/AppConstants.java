@@ -15,7 +15,7 @@ public class AppConstants {
     public static final String MAIL_PASSWORD = "jslmarpqojoixgdr";
     public static final String VERIFY_URL = "http://localhost:8081/";
     public static String CHANGE_URL = "";
-    public static final int IMAGE_SIZE = 500000;
+    public static final int IMAGE_SIZE = 100000;
     public static final int EXPIRY_TIME = 5;
 
 }

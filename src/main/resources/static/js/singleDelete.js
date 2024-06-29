@@ -48,7 +48,7 @@ function deletecontact(cid, page, fromRes, element, from, searchValue, searchFie
                             text: 'The Contact has been deleted.',
                             icon: 'success',
                             timer: 800,
-                            html: '<i class="fas fa-bookmark" style="color: #3085d6; font-size: 2em;"></i>',
+                            html: '<i class="fas fa-trash" style="color: red; font-size: 2em;"></i>',
                             timerProgressBar: true,
                             didOpen: () => {
                                 Swal.showLoading();

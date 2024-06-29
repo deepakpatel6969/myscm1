@@ -56,6 +56,24 @@ textarea {
 
 /* Nav bar links */
 
-.active-nav{
+.active-nav {
     color: #079cf3;
+}
+
+.active-delete {
+    background-color: #c4c1c1;
+    color: red;
+}
+
+.active-delete:hover {
+    background-color: #949494;
+
+}
+
+.active-delete i {
+    color: red;
+}
+
+.active-delete span {
+    color: red;
 }

@@ -10,6 +10,7 @@ import com.myScm.scm.serviceImpl.ContactServiceImpl;
 import com.myScm.scm.serviceImpl.ExportServiceImpl;
 import com.myScm.scm.serviceImpl.UserServiceImple;
 
+import jakarta.servlet.http.HttpSession;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +51,8 @@ public class ApiController {
         this.exportServiceImpl = exportServiceImpl;
     }
 
+    // Get Data of any single Contact
+
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/contact-info/{contact}/{user}")
     public ContactForm getcontactData(@PathVariable("contact") String id, @PathVariable("user") String userid) {
@@ -62,7 +66,7 @@ public class ApiController {
         return form;
     }
 
-    // Add contacts in the fsvorite List
+    // Add contacts in the favorite List
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/makefavorite")
     public ResponseEntity<String> makeFavoriteList(@RequestBody Map<String, Object> contactList) {
@@ -83,6 +87,7 @@ public class ApiController {
 
     }
 
+    // Delete The Contact
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/deleteContacts")
     public ResponseEntity<String> deleteContacts(@RequestBody Map<String, Object> contactList) {
@@ -131,6 +136,7 @@ public class ApiController {
         }
     }
 
+    // Generate Excel file
     @SuppressWarnings("null")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/generate-excel")
@@ -158,6 +164,7 @@ public class ApiController {
         }
     }
 
+    // Delete Single contact
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/deleteSingle")
     public ResponseEntity<String> deleteSingleContacts(@RequestParam(name = "contact") String id,
@@ -177,6 +184,7 @@ public class ApiController {
 
     }
 
+    // Make single contact to favorite
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/favoriteSingle")
     public ResponseEntity<String> makeSingleFavorite(@RequestParam(name = "contact") String id,
@@ -196,5 +204,28 @@ public class ApiController {
 
     }
 
+    // delete The contact
+    @SuppressWarnings("static-access")
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/delete-account")
+    public ResponseEntity<String> deleteContact(Authentication authentication, HttpSession session,
+            SecurityContextHolder contextHolder) {
+
+        try {
+            this.user = this.userServiceImple.getUserFromLogin(authentication);
+
+           if(this.userServiceImple.deleteUser(this.user)){
+
+               contextHolder.clearContext();
+               session.invalidate();
+            }
+            return ResponseEntity.status(HttpStatus.OK).body("Successfull deleted!!");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("INTERNAL_SERVER_ERROR");
+        }
+
+    }
 
 }

@@ -27,5 +27,5 @@ public interface contactServices {
     public List<ContactForm> getcontactfrombyId(List<String> ids);
     public void deleteContactsbyIds(User user , List<String> contactlist);
     public void makeFavoriteByIds(User user , List<String> contactlist);
-
+    public void deleteContactByContacts(User user , List<Contact> contacts);
 }
